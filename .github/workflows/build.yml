@@ -1,9 +1,7 @@
 name: Build
 
+# 仅手动触发做产物校验；发布（含打 tag）走 release.yml
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
 
 permissions:
