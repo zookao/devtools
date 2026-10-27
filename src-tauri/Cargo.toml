@@ -1,0 +1,41 @@
+[package]
+name = "devtools"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "devtools_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+tauri-plugin-clipboard-manager = "2"
+serde = { version = "1", features = ["derive"] }
+# preserve_order: 保持 key 的原始顺序（否则 BTreeMap 会自动排序，无法实现“可选排序”）
+serde_json = { version = "1", features = ["preserve_order"] }
+md-5 = "0.10"
+base64 = "0.22"
+rand = "0.9"
+serde_yaml = "0.9"
+# 网络请求（IP 查询）：用系统 TLS，避免额外打包 aws-lc 等加密库
+reqwest = { version = "0.13", default-features = false, features = ["native-tls"] }
+
+
+# Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
